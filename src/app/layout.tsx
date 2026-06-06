@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "@/app/globals.css"; // Menggunakan alias agar kebal error path
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "TicketGo - Nobar Solo Paragon",
