@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import api from "@/lib/axios";
 import { LayoutDashboard, Ticket, QrCode, LogOut, Users } from "lucide-react";
+import "../globals.css";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -46,11 +47,21 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   // Jika di halaman login, jangan tampilkan sidebar
   if (isLoginPage) {
-    return <div className="min-h-screen bg-hermes font-sans selection:bg-torch-red selection:text-white">{children}</div>;
+    return (
+      <html lang="id">
+        <body>
+          <div className="min-h-screen bg-hermes font-sans selection:bg-torch-red selection:text-white">
+            {children}
+          </div>
+        </body>
+      </html>
+    );
   }
 
   return (
-    <div className="min-h-screen flex bg-[#0f1219] text-light-gray font-sans selection:bg-avg-green selection:text-white">
+    <html lang="id">
+      <body>
+        <div className="min-h-screen flex bg-[#0f1219] text-light-gray font-sans selection:bg-avg-green selection:text-white">
       
       {/* ================= SIDEBAR BRUTALIST ================= */}
       <aside className="w-72 bg-dark-heather border-r border-white/5 flex flex-col relative z-20 shadow-[8px_0_24px_rgba(0,0,0,0.5)]">
@@ -109,7 +120,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {children}
         </div>
       </main>
-    </div>
+      </div>
+      </body>
+    </html>
   );
 }
 

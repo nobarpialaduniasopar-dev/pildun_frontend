@@ -1,5 +1,6 @@
 import { Trophy } from "lucide-react";
 import Link from "next/link";
+import "../globals.css";
 
 export default function PublicLayout({
   children,
@@ -7,7 +8,9 @@ export default function PublicLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col bg-hermes text-light-gray font-sans selection:bg-avg-green selection:text-white">
+    <html lang="id">
+      <body>
+        <div className="min-h-screen flex flex-col bg-hermes text-light-gray font-sans selection:bg-avg-green selection:text-white">
       <header className="w-full z-50 py-6 px-6 md:px-12">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
@@ -42,5 +45,7 @@ export default function PublicLayout({
         <p>&copy; 2026 NOBAR PIALA DUNIA SOLO PARAGON.</p>
       </footer>
     </div>
+      </body>
+    </html>
   );
 }
