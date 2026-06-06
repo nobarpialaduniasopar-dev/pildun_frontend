@@ -33,7 +33,20 @@ export default async function Home() {
   return (
     <div className="w-full relative">
       
-      {/* GLOBAL WATERMARK (Piala Dunia Vibe) - Fixed di background */}
+      {/* CSS Animasi Carousel Ken Burns */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes crossfade1 {
+          0%, 45% { opacity: 0.8; transform: scale(1); }
+          50%, 95% { opacity: 0; transform: scale(1.05); }
+          100% { opacity: 0.8; transform: scale(1); }
+        }
+        @keyframes crossfade2 {
+          0%, 45% { opacity: 0; transform: scale(1.05); }
+          50%, 95% { opacity: 0.8; transform: scale(1); }
+          100% { opacity: 0; transform: scale(1.05); }
+        }
+      `}} />
+
       <div className="fixed inset-0 pointer-events-none flex items-center justify-center opacity-[0.02] z-0 overflow-hidden">
         <h1 className="text-[25vw] font-black italic text-white whitespace-nowrap transform -rotate-[10deg] tracking-tighter">
           WORLDCUP
@@ -41,17 +54,27 @@ export default async function Home() {
       </div>
 
       <div className="relative z-10">
-        {/* ================= HERO SECTION (Aggressive Sporty Design) ================= */}
-        <div className="relative bg-dark-heather p-8 md:p-16 shadow-2xl mb-12 flex flex-col md:flex-row items-center justify-between border-l-8 border-avg-green overflow-hidden">
+        
+        {/* ================= HERO SECTION ================= */}
+        <div className="relative bg-dark-heather p-8 md:p-16 shadow-2xl mb-12 flex flex-col md:flex-row items-center justify-between border-l-8 border-avg-green overflow-hidden group">
           
-          {/* Background Textures & Watermarks */}
-          <div className="absolute right-0 top-0 w-full md:w-1/2 h-full bg-[repeating-linear-gradient(-45deg,transparent,transparent_10px,rgba(255,255,255,0.03)_10px,rgba(255,255,255,0.03)_20px)] pointer-events-none"></div>
-          <div className="absolute -right-10 -bottom-16 text-[180px] font-black text-white/[0.03] italic leading-none pointer-events-none tracking-tighter">
-            2026
+          <div className="absolute right-0 top-0 w-full md:w-1/2 h-full bg-[repeating-linear-gradient(-45deg,transparent,transparent_10px,rgba(255,255,255,0.03)_10px,rgba(255,255,255,0.03)_20px)] pointer-events-none z-10"></div>
+          
+          {/* CAROUSEL VENUE BACKGROUND (Kanan) */}
+          <div className="absolute top-0 right-0 w-full md:w-[60%] h-full hidden md:block overflow-hidden pointer-events-none z-0">
+            {/* Gambar Pool 1 */}
+            <div className="absolute inset-0 bg-[url('/images/POOL1.webp')] bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-1000" 
+                 style={{ animation: 'crossfade1 12s infinite ease-in-out', maskImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,1) 100%)', WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,1) 100%)' }}></div>
+            {/* Gambar Pool 2 */}
+            <div className="absolute inset-0 bg-[url('/images/POOL2.webp')] bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-1000" 
+                 style={{ animation: 'crossfade2 12s infinite ease-in-out', maskImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,1) 100%)', WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,1) 100%)' }}></div>
+            
+            {/* Gradient shadow untuk transisi mulus ke bawah */}
+            <div className="absolute inset-0 bg-gradient-to-t from-dark-heather via-transparent to-transparent z-10"></div>
           </div>
 
           {/* Kiri: Teks & Tombol */}
-          <div className="w-full md:w-3/5 relative z-10">
+          <div className="w-full md:w-1/2 relative z-20">
             <div className="inline-flex items-center gap-2 bg-torch-red text-white px-4 py-1 text-[10px] font-black tracking-[0.2em] uppercase mb-8 transform -skew-x-12">
               <span className="transform skew-x-12 flex items-center gap-2"><Flame className="w-3 h-3" /> HOT MATCH</span>
             </div>
@@ -76,9 +99,8 @@ export default async function Home() {
 
           {/* Kanan: Floating Card (Brutalist) */}
           {mainMatch && (
-            <div className="hidden md:block absolute right-12 top-1/2 -translate-y-1/2 w-[340px] bg-hermes border border-white/20 transform -skew-x-6 shadow-[16px_16px_0px_rgba(0,0,0,0.5)] z-20">
+            <div className="hidden md:block absolute right-12 top-1/2 -translate-y-1/2 w-[340px] bg-hermes/90 backdrop-blur-sm border border-white/20 transform -skew-x-6 shadow-[16px_16px_0px_rgba(0,0,0,0.5)] z-30 pointer-events-auto">
               <div className="absolute top-0 left-0 w-full h-1.5 bg-torch-red"></div>
-              {/* Counter-skew konten agar tetap bisa dibaca normal */}
               <div className="p-8 transform skew-x-6">
                 <div className="text-[9px] text-avg-green text-center uppercase font-black tracking-[0.3em] mb-6 flex items-center justify-center gap-4">
                   <div className="h-[2px] bg-avg-green/30 flex-grow"></div>
@@ -101,26 +123,12 @@ export default async function Home() {
                     <span className="font-black text-white text-sm uppercase tracking-wider">{mainMatch.team_b}</span>
                   </div>
                 </div>
-                <div className="mt-6 text-center text-[10px] text-white/40 font-black uppercase tracking-widest bg-black/20 py-2">
-                  KICK-OFF {format(new Date(mainMatch.match_date), "HH:mm")} WIB
+                <div className="mt-6 text-center text-[10px] text-white/80 font-black uppercase tracking-widest bg-black/40 py-2 truncate px-2" title={mainMatch.venue}>
+                  VENUE: {mainMatch.venue}
                 </div>
               </div>
             </div>
           )}
-        </div>
-
-        {/* ================= SLOT SPONSOR ================= */}
-        <div className="mb-16">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="h-px bg-white/10 flex-grow"></div>
-            <h4 className="text-center text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">Official Partners</h4>
-            <div className="h-px bg-white/10 flex-grow"></div>
-          </div>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-30 grayscale hover:grayscale-0 transition-all duration-300">
-            <div className="text-2xl font-black text-white italic tracking-tighter">SPONSOR<span className="text-torch-red">1</span></div>
-            <div className="text-2xl font-black text-white italic tracking-tighter">SPONSOR<span className="text-torch-red">2</span></div>
-            <div className="text-2xl font-black text-white italic tracking-tighter">SPONSOR<span className="text-torch-red">3</span></div>
-          </div>
         </div>
 
         {/* ================= JADWAL PERTANDINGAN ================= */}
@@ -139,24 +147,23 @@ export default async function Home() {
   );
 }
 
-// Komponen Card Jadwal (Desain Tajam, Ticket-Style)
+// Komponen Card Jadwal
 function SportyMatchCard({ match }: { match: Match }) {
   const isSoldOut = match.quota <= 0;
 
   return (
     <div className="bg-dark-heather border border-white/10 flex flex-col hover:border-avg-green transition-colors relative overflow-hidden group">
-      
-      {/* Background Pattern on Hover */}
       <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_5px,rgba(255,255,255,0.02)_5px,rgba(255,255,255,0.02)_10px)] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
 
-      {/* Header Info */}
-      <div className="px-6 py-3 flex justify-between items-center border-b border-white/5 bg-black/20">
-        <span className="text-[10px] font-black text-white flex items-center gap-2 uppercase tracking-widest">
+      {/* Header Info - PENGATURAN TRUNCATE VENUE */}
+      <div className="px-5 py-3 flex justify-between items-center border-b border-white/5 bg-black/20">
+        <span className="text-[10px] font-black text-white flex items-center gap-2 uppercase tracking-widest flex-shrink-0">
           <span className="w-2 h-2 rounded-full bg-torch-red animate-pulse"></span> 
           {format(new Date(match.match_date), "dd MMM • HH:mm", { locale: id })}
         </span>
-        <span className="text-[9px] font-black text-avg-green uppercase tracking-[0.2em] flex items-center gap-1">
-          <MapPin className="w-3 h-3"/> {match.venue}
+        <span className="text-[9px] font-black text-avg-green uppercase tracking-[0.2em] flex items-center gap-1 max-w-[50%] justify-end" title={match.venue}>
+          <MapPin className="w-3 h-3 flex-shrink-0"/> 
+          <span className="truncate">{match.venue}</span>
         </span>
       </div>
 
