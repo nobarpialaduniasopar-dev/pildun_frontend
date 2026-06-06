@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import api from "@/lib/axios";
-import { LayoutDashboard, Ticket, QrCode, LogOut, Users } from "lucide-react";
+import { LayoutDashboard, Ticket, QrCode, LogOut, Users, Trophy } from "lucide-react";
 import "../globals.css";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -77,6 +77,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <p className="px-4 text-[9px] font-black text-white/30 uppercase tracking-[0.3em] mb-4">Core Modules</p>
           
           <NavLink href="/admin/dashboard" icon={<LayoutDashboard size={18} />} label="Jadwal Match" active={pathname === "/admin/dashboard"} />
+          <NavLink href="/admin/standings" icon={<Trophy size={18} />} label="Klasemen & Bagan" active={pathname === "/admin/standings"} />
           <NavLink href="/admin/transactions" icon={<Users size={18} />} label="Data Transaksi" active={pathname === "/admin/transactions"} />
           
           <div className="my-6 border-t border-white/5 mx-4"></div>

@@ -131,7 +131,15 @@ export default async function Home() {
           )}
         </div>
 
-        {/* ================= JADWAL PERTANDINGAN ================= */}
+        {/* ================= SPONSOR UTAMA (PLATINUM) ================= */}
+          <div className="w-full mb-12 border-2 border-dashed border-white/20 bg-white/5 py-8 px-6 flex flex-col items-center justify-center group hover:border-avg-green transition-colors cursor-pointer transform -skew-x-3">
+            <span className="text-white/40 font-black tracking-[0.3em] text-sm md:text-base uppercase group-hover:text-avg-green transition-colors transform skew-x-3">
+              [ PLATINUM SPONSOR SPACE - 1200x200 ]
+            </span>
+            <span className="text-white/20 text-xs mt-2 font-semibold transform skew-x-3">Your Premium Brand Here</span>
+          </div>
+
+          {/* ================= JADWAL PERTANDINGAN ================= */}
         <div className="mb-8 flex items-center gap-4">
           <h2 className="text-4xl md:text-5xl font-black italic tracking-tighter uppercase">
             <span className="text-white">Jadwal</span> <span className="text-avg-green">Pertandingan</span>
@@ -142,6 +150,32 @@ export default async function Home() {
           {hot_matches.map((match: Match) => <SportyMatchCard key={match.id} match={match} />)}
           {upcoming_matches.map((match: Match) => <SportyMatchCard key={match.id} match={match} />)}
         </div>
+
+        {/* ================= SPONSOR PENDUKUNG (GOLD & SILVER) ================= */}
+        <div className="mt-16 pt-12 border-t border-white/10 pb-8">
+          <h3 className="text-center text-xl font-black italic text-white/50 uppercase tracking-widest mb-8">
+            Didukung Oleh
+          </h3>
+          
+          {/* Gold Tier - Medium */}
+          <div className="flex flex-wrap justify-center gap-6 mb-6">
+            {[1, 2].map((i) => (
+              <div key={`gold-${i}`} className="w-48 md:w-64 h-24 border-2 border-dashed border-white/15 bg-white/5 flex flex-col items-center justify-center group hover:border-[#FFD700] transition-colors cursor-pointer transform -skew-x-3">
+                <span className="text-white/30 font-black tracking-widest text-xs group-hover:text-[#FFD700] transition-colors transform skew-x-3">[ GOLD SPONSOR ]</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Silver Tier - Small */}
+          <div className="flex flex-wrap justify-center gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={`silver-${i}`} className="w-32 md:w-40 h-16 border-2 border-dashed border-white/10 bg-white/5 flex flex-col items-center justify-center group hover:border-[#C0C0C0] transition-colors cursor-pointer transform -skew-x-3">
+                <span className="text-white/20 font-black tracking-wider text-[10px] group-hover:text-[#C0C0C0] transition-colors transform skew-x-3">[ SILVER ]</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );
