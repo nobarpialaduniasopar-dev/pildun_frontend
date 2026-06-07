@@ -2,105 +2,104 @@
 
 import { useEffect, useState } from "react";
 import api from "@/lib/axios";
-import { Link as LinkIcon, RefreshCw, Copy, ExternalLink, ShieldAlert, PlusCircle } from "lucide-react";
+import { Link2, RefreshCw, Copy, ExternalLink, ShieldAlert } from "lucide-react";
 
 export default function ScannerManager() {
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-
-  const showToast = (message: string, type: 'success' | 'error') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
-  };
 
   const fetchToken = async () => {
     try {
-      setLoading(true);
-      const res = await api.get('/admin/scanner/token');
-      // Jika token null atau empty string dari backend, set kosong
-      setToken(res.data.token || "");
+      const res = await api.get("/admin/scanner/token");
+      setToken(res.data.token);
     } catch (err) {
-      showToast("Gagal memuat status scanner.", "error");
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => { fetchToken(); }, []);
+  useEffect(() => {
+    fetchToken();
+  }, []);
 
   const generateNewToken = async () => {
-    // Alert custom tidak bisa menggantikan confirm browser bawaan, 
-    // namun kita bisa menggunakan state untuk menampilkan modal konfirmasi jika mau.
-    // Untuk saat ini kita pakai confirm bawaan tapi logikanya sudah diperbaiki.
-    if (!confirm(token ? "Link lama akan hangus. Lanjutkan?" : "Buat link scanner baru?")) return;
+    if (!confirm("PERINGATAN: Membuat link baru akan membuat semua HP Gatekeeper yang menggunakan link lama ter-logout dan tidak bisa melakukan scan. Lanjutkan?")) return;
     
+    setLoading(true);
     try {
-      setLoading(true);
-      const res = await api.post('/admin/scanner/generate');
+      const res = await api.post("/admin/scanner/token");
       setToken(res.data.token);
-      showToast(res.data.message, "success");
+      alert(res.data.message);
     } catch (err) {
-      showToast("Gagal generate link.", "error");
+      alert("Gagal membuat link baru.");
     } finally {
       setLoading(false);
     }
   };
 
-  const scannerLink = token ? `${window.location.origin}/gatekeeper/${token}` : "";
+  const gatekeeperUrl = typeof window !== 'undefined' ? `${window.location.origin}/gatekeeper/${token}` : '';
 
   return (
-    <div className="space-y-8 max-w-4xl relative">
-      {/* Toast Notification */}
-      {toast && (
-        <div className={`fixed top-5 right-5 z-50 px-6 py-4 font-black text-white transform -skew-x-3 shadow-xl ${toast.type === 'success' ? 'bg-avg-green' : 'bg-torch-red'}`}>
-          {toast.message}
-        </div>
-      )}
-
-      <div className="bg-dark-heather border border-white/10 p-6 flex items-center justify-between shadow-[8px_8px_0_rgba(0,0,0,0.5)]">
-        <div>
-          <h1 className="text-3xl font-black text-white italic tracking-tighter uppercase flex items-center gap-3">
-            <LinkIcon className="text-avg-green" size={32} />
-            Gatekeeper <span className="text-avg-green">Manager</span>
-          </h1>
-        </div>
+    <div className="space-y-8">
+      <div className="bg-dark-heather p-6 border-l-8 border-avg-green shadow-[8px_8px_0px_rgba(0,0,0,0.3)]">
+        <h1 className="text-3xl font-black text-white uppercase tracking-tighter italic">
+          GATEKEEPER <span className="text-avg-green">MANAGER</span>
+        </h1>
+        <p className="text-white/50 text-xs font-bold uppercase tracking-widest mt-1">Manajemen Akses Kamera Penjaga Pintu</p>
       </div>
 
-      <div className="bg-white/5 border border-white/20 p-8 transform -skew-x-2 relative overflow-hidden">
-        <h2 className="text-xl font-black text-white uppercase tracking-widest mb-6 border-b border-white/10 pb-4">
-          Status Scanner
-        </h2>
-        
-        {!token ? (
-          <div className="text-center py-10 border-2 border-dashed border-white/20">
-            <ShieldAlert className="mx-auto text-white/20 mb-4" size={48} />
-            <p className="text-white/50 font-bold mb-6">Belum ada link scanner aktif.</p>
+      <div className="bg-dark-heather border border-white/10 p-8 shadow-2xl relative overflow-hidden">
+        <div className="absolute -right-10 -bottom-10 text-white/5 rotate-[-15deg] pointer-events-none">
+          <Link2 size={250} />
+        </div>
+
+        <div className="relative z-10 max-w-2xl space-y-6">
+          <div className="flex items-start gap-4 p-4 bg-torch-red/10 border-l-4 border-torch-red">
+            <ShieldAlert className="text-torch-red shrink-0" />
+            <p className="text-sm font-bold text-light-gray">
+              Kirimkan link ini ke petugas lapangan (Gatekeeper) agar mereka bisa membuka kamera di HP masing-masing tanpa perlu login.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black text-light-gray uppercase tracking-widest">Active Gatekeeper Link</label>
+            <div className="flex flex-col md:flex-row gap-4">
+              <input 
+                type="text" 
+                readOnly 
+                value={loading ? "Memuat link..." : gatekeeperUrl}
+                className="flex-1 bg-black/40 border border-white/20 text-white p-4 font-mono text-sm outline-none"
+              />
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => { navigator.clipboard.writeText(gatekeeperUrl); alert('Link disalin!'); }}
+                  className="bg-white/10 hover:bg-white hover:text-dark-heather text-white p-4 transition flex items-center justify-center border border-white/20"
+                  title="Salin Link"
+                >
+                  <Copy size={20} />
+                </button>
+                <a 
+                  href={gatekeeperUrl}
+                  target="_blank"
+                  className="bg-avg-green hover:bg-green-600 text-white p-4 transition flex items-center justify-center font-black uppercase text-xs gap-2"
+                >
+                  <ExternalLink size={16} /> BUKA SCANNER
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-8 border-t border-white/10">
             <button 
               onClick={generateNewToken}
-              className="bg-avg-green text-white font-black px-8 py-4 uppercase hover:bg-white hover:text-avg-green transition-all"
+              disabled={loading}
+              className="bg-transparent border-2 border-torch-red text-torch-red hover:bg-torch-red hover:text-white font-black px-6 py-3 uppercase tracking-widest transition-all transform -skew-x-12 flex items-center gap-2"
             >
-              <PlusCircle className="inline mr-2" /> BUAT SCANNER
+              <span className="transform skew-x-12 flex items-center gap-2"><RefreshCw size={16} /> GENERATE LINK BARU (CABUT AKSES LAMA)</span>
             </button>
           </div>
-        ) : (
-          <>
-            <div className="bg-black/60 border border-avg-green/50 p-6 mb-6 break-all">
-              <span className="text-avg-green font-mono text-lg">{scannerLink}</span>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              <button onClick={() => { navigator.clipboard.writeText(scannerLink); showToast("Link disalin!", "success"); }} className="bg-white/10 text-white font-black px-6 py-4 uppercase hover:bg-white hover:text-black transition-colors transform -skew-x-3 flex items-center gap-2">
-                <Copy size={18} /> COPY
-              </button>
-              <button onClick={() => window.open(scannerLink, '_blank')} className="bg-hermes text-white font-black px-6 py-4 uppercase hover:bg-white hover:text-hermes transition-colors transform -skew-x-3 flex items-center gap-2">
-                <ExternalLink size={18} /> BUKA
-              </button>
-              <button onClick={generateNewToken} className="bg-torch-red text-white font-black px-6 py-4 uppercase hover:bg-white hover:text-torch-red transition-colors transform -skew-x-3 flex items-center gap-2 ml-auto">
-                <RefreshCw size={18} /> RE-GENERATE
-              </button>
-            </div>
-          </>
-        )}
+        </div>
       </div>
     </div>
   );
