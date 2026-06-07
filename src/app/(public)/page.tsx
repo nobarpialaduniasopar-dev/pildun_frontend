@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Flame, MapPin, Zap } from "lucide-react";
 import Countdown from "@/components/Countdown";
 import OngoingMatchCarousel from "@/components/OngoingMatchCarousel";
+import HotMatchSection from "@/components/HotMatchSection";
 
 type Match = {
   id: string;
@@ -137,19 +138,7 @@ export default async function Home() {
         </div>
 
         {/* ================= HOT MATCH SECTION ================= */}
-        {hot_matches.length > 0 && (
-          <div className="mb-16">
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-4xl md:text-5xl font-black italic tracking-tighter uppercase flex items-center gap-4">
-                <Flame className="w-10 h-10 text-torch-red animate-pulse" />
-                <span className="text-white">HOT</span> <span className="text-torch-red">MATCHES</span>
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {hot_matches.map((match: Match) => <HotMatchCard key={match.id} match={match} />)}
-            </div>
-          </div>
-        )}
+        <HotMatchSection initialMatches={hot_matches} />
 
         {/* ================= SPONSOR UTAMA (PLATINUM) ================= */}
           <div className="w-full mb-12 border-2 border-dashed border-white/20 bg-white/5 py-8 px-6 flex flex-col items-center justify-center group hover:border-avg-green transition-colors cursor-pointer transform -skew-x-3">
@@ -272,19 +261,22 @@ export default async function Home() {
             </p>
           </div>
 
-          {/* ================= JADWAL PERTANDINGAN ================= */}
+          {/* ================= JADWAL PERTANDINGAN (LIMIT 9) ================= */}
         {upcoming_matches.length > 0 && (
-          <>
-            <div className="mb-8 flex items-center gap-4">
+          <div className="mb-16">
+            <div className="mb-8 flex flex-col md:flex-row items-start md:items-end justify-between gap-4 border-b border-white/10 pb-4">
               <h2 className="text-4xl md:text-5xl font-black italic tracking-tighter uppercase">
                 <span className="text-white">Jadwal</span> <span className="text-avg-green">Pertandingan</span>
               </h2>
+              <Link href="/matches" className="bg-avg-green hover:bg-white text-white hover:text-avg-green font-black px-6 py-2 uppercase tracking-widest transition-all transform -skew-x-12 border-2 border-transparent hover:border-avg-green shadow-[4px_4px_0_rgba(0,0,0,0.5)]">
+                <span className="block transform skew-x-12">SEMUA MATCH</span>
+              </Link>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {upcoming_matches.map((match: Match) => <SportyMatchCard key={match.id} match={match} />)}
+              {upcoming_matches.slice(0, 9).map((match: Match) => <SportyMatchCard key={match.id} match={match} />)}
             </div>
-          </>
+          </div>
         )}
 
         {/* ================= SPONSOR PENDUKUNG (GOLD & SILVER) ================= */}

@@ -43,7 +43,7 @@ export default function FullScreenScanner() {
     try {
       // KIRIM TOKEN GATEKEEPER KE BACKEND SEBAGAI OTENTIKASI
       const res = await api.post("/gatekeeper/scan", { 
-        ticket_code: decodedText,
+        ticket_id: decodedText, // WAJIB ticket_id sesuai validasi backend
         gatekeeper_token: token 
       });
       triggerToast('success', res.data.message, res.data.data);
